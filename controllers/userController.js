@@ -1,6 +1,5 @@
 import userModel from "../models/User.js";
 import bcrypt from "bcrypt";
-import e from "express";
 import jwt from "jsonwebtoken";
 
 
@@ -67,6 +66,23 @@ class UserController {
 
         } catch (error) {
 
+        }
+    }
+
+    static changeUserPassword = async (req, res) => {
+        const { password, cofirmation_password } = req.body;
+        if (password && cofirmation_password) {
+            if (password !== cofirmation_password) {
+                return res.status(400).json({ message: "New Password and Confirm Password don't match" });
+            } else {
+                const newHashPassword = await bcrypt.hash(password, 10);
+                console.log("REQ USER DATA", req.user)
+                await userModel.findByIdAndUpdate(req.user._id, { $set: { password: newHashPassword } });
+                return res.status(200).json({ message: "Password Change SuccessFully" });
+
+            }
+        } else {
+            return res.status(400).json({ message: "All Field Are Required" });
         }
     }
 }
