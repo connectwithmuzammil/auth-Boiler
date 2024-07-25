@@ -14,7 +14,7 @@ var checkUserAuth = async (req, res, next) => {
 
             //GET USER FROM TOKEM
             req.user = await UserModel.findById(userID).select('-password');
-            console.log("req.user", req.user)
+            // console.log("req.user", req.user)
 
             next();
 
